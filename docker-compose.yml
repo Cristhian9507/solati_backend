@@ -1,0 +1,32 @@
+version: "3.2"
+
+services:
+  db:
+    image: postgres:13.5
+    container_name: psqlempleados_backend
+    hostname: psqlempleados
+    environment:
+      POSTGRES_DB:       ${DB_DATABASE}
+      POSTGRES_USER:     ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5537:5432"
+    restart: always
+    networks:
+      - empleados-network
+
+  empleados_backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: empleados_backend
+    ports:
+      - 8283:80
+    depends_on:
+      - db
+    networks:
+      - empleados-network
+#Docker Networks
+networks:
+  empleados-network:
+    driver: bridge
